@@ -1,0 +1,58 @@
+<!-- detector_app/templates/detector_app/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector</title>
+    {% load static %} <!-- Optional: if you add CSS -->
+    <!-- <link rel="stylesheet" href="{% static 'detector_app/style.css' %}"> -->
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        form textarea { width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        form button {
+            background-color: #5cb85c; color: white; padding: 10px 15px;
+            border: none; border-radius: 4px; cursor: pointer; font-size: 16px;
+        }
+        form button:hover { background-color: #4cae4c; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 4px; }
+        .result.REAL { background-color: #dff0d8; border: 1px solid #d6e9c6; color: #3c763d; }
+        .result.FAKE { background-color: #f2dede; border: 1px solid #ebccd1; color: #a94442; }
+        .result.INVALID { background-color: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; }
+        .submitted-text { margin-top: 15px; padding: 10px; background-color: #eee; border: 1px solid #ccc; border-radius: 4px; white-space: pre-wrap; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fake News Detector</h1>
+
+        {% if error_message %}
+            <p class="error">{{ error_message }}</p>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.news_article.label_tag }}<br>
+            {{ form.news_article }}<br>
+            <button type="submit">Analyze News</button>
+        </form>
+
+        {% if prediction_text %}
+            <div class="result {% if prediction_label == 'REAL' %}REAL{% elif prediction_label == 'FAKE' %}FAKE{% else %}INVALID{% endif %}">
+                <h2>Prediction:</h2>
+                <p>{{ prediction_text }}</p>
+            </div>
+        {% endif %}
+
+        {% if submitted_text %}
+            <div class="submitted-text">
+                <h3>Submitted Text:</h3>
+                <p>{{ submitted_text }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

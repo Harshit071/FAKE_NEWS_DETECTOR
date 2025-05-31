@@ -1,0 +1,6 @@
+Django==4.2.*  # Or your Django version
+scikit-learn==1.3.* # Or your scikit-learn version
+pandas==2.0.* # Or your pandas version
+nltk==3.8.* # Or your nltk version
+joblib==1.3.* # Or your joblib version
+# Add other dependencies if you have them (e.g., numpy if not pulled by sklearn)
