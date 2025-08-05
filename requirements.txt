@@ -1,0 +1,9 @@
+Django==5.2.1
+scikit-learn==1.5.2
+pandas==2.2.1
+nltk==3.8.1
+joblib==1.4.2
+gunicorn==23.0.0
+whitenoise==6.8.0
+dj-database-url==2.2.1
+psycopg2-binary==2.9.12 

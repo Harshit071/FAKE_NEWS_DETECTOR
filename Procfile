@@ -1,0 +1,1 @@
+web: gunicorn fakenews_project.wsgi --log-file - 
