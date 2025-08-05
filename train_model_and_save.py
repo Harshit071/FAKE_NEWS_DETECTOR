@@ -32,9 +32,9 @@ LABEL_MAPPING = {'FAKE': 0, 'REAL': 1}
 # POSITIVE_CLASS_LABEL_NUMERIC = 1 # The numeric label representing "REAL"
 
 # Data file paths (update if your paths are different)
-FAKE_NEWS_PATH = '/Users/harshit/Downloads/archive (1)/Fake.csv'
-TRUE_NEWS_PATH = '/Users/harshit/Downloads/archive (1)/True.csv'
-COMBINED_NEWS_CSV = 'news.csv' # Temporary combined file
+# FAKE_NEWS_PATH = '/Users/harshit/Downloads/archive (1)/Fake.csv'
+# TRUE_NEWS_PATH = '/Users/harshit/Downloads/archive (1)/True.csv'
+COMBINED_NEWS_CSV = 'news.csv' # Combined file already exists
 
 TEXT_COLUMN = 'text'        # Column containing the news article body after combining
 LABEL_COLUMN = 'label'      # Column containing 'FAKE' or 'REAL' labels
@@ -90,50 +90,14 @@ def preprocess_text_for_model(text_input): # Renamed for clarity within this scr
 
 # --- Main Training Script ---
 def create_combined_dataset_and_train():
-    print("--- Starting Dataset Creation and Model Training ---")
+    print("--- Starting Model Training with Existing Dataset ---")
 
-    # --- A. Create Combined Dataset (from your original script) ---
-    print(f"Loading FAKE news from: {FAKE_NEWS_PATH}")
-    try:
-        fake_df = pd.read_csv(FAKE_NEWS_PATH)
-        print(f"Loading TRUE news from: {TRUE_NEWS_PATH}")
-        true_df = pd.read_csv(TRUE_NEWS_PATH)
-    except FileNotFoundError as e:
-        print(f"Error: Could not load Fake.csv or True.csv. Please check paths. {e}")
-        return
-
-    fake_df['label'] = 'FAKE' # Assign label before selecting columns
-    true_df['label'] = 'REAL' # Assign label before selecting columns
-
-    # Combine them
-    df_combined = pd.concat([fake_df, true_df], ignore_index=True)
-
-    # Shuffle the dataset
-    df_combined = df_combined.sample(frac=1, random_state=LOGREG_RANDOM_STATE).reset_index(drop=True)
-
-    # Select relevant columns (text and label)
-    # Check if 'text' column exists, if not, maybe 'title' or other columns exist.
-    # For this dataset structure, 'text' is usually present.
-    if TEXT_COLUMN not in df_combined.columns:
-        print(f"Error: Expected text column '{TEXT_COLUMN}' not found in the combined dataframe.")
-        print(f"Available columns: {df_combined.columns.tolist()}")
-        # You might want to inspect df_combined.head() here if this error occurs
-        return
-    
-    df = df_combined[[TEXT_COLUMN, LABEL_COLUMN]].copy() # Use .copy() to avoid SettingWithCopyWarning
-    df.dropna(subset=[TEXT_COLUMN], inplace=True) # Remove rows where text is missing
-    print(f"Combined dataset shape: {df.shape}")
-    df.to_csv(COMBINED_NEWS_CSV, index=False)
-    print(f"Combined '{COMBINED_NEWS_CSV}' created successfully.")
-
-    # --- B. Now proceed with training using the combined 'news.csv' ---
-
-    # --- 2. Load Data (the combined one we just created) ---
-    print(f"Loading combined data from '{COMBINED_NEWS_CSV}' for training...")
+    # --- Load Data from existing news.csv ---
+    print(f"Loading data from '{COMBINED_NEWS_CSV}' for training...")
     try:
         df = pd.read_csv(COMBINED_NEWS_CSV)
     except FileNotFoundError:
-        print(f"Error: {COMBINED_NEWS_CSV} not found. Should have been created above.")
+        print(f"Error: {COMBINED_NEWS_CSV} not found. Please ensure the file exists.")
         return
 
     df.dropna(subset=[TEXT_COLUMN, LABEL_COLUMN], inplace=True)
